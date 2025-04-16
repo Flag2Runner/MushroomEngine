@@ -1,0 +1,47 @@
+cmake_minimum_required(VERSION 3.30)
+
+project(mushroom
+    LANGUAGES C CXX
+)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# creates a veriable with the name MUSHROOM_ENGINE_TARGET_NAME, the value is MushroomEngine
+set(MUSHROOM_ENGINE_TARGET_NAME MushroomEngine)
+
+# defines a build target that will be built into a executable, it's name is the value of variable  MUSHROOM_ENGINE_TARGET_NAME
+add_executable(${MUSHROOM_ENGINE_TARGET_NAME})
+
+# Tells cmake what source files that the MushroomEngine project has
+target_sources(${MUSHROOM_ENGINE_TARGET_NAME}
+    PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/MushroomEngine/src/main.cpp"
+)
+
+# Add the glfw lib
+include(FetchContent)
+FetchContent_Declare(
+    glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
+    GIT_TAG 3.4
+    )
+    
+FetchContent_MakeAvailable(glfw)
+
+# Configure glad lib
+set(GLAD_LIB_NAME glad)
+add_library(${GLAD_LIB_NAME})
+target_sources(${GLAD_LIB_NAME} PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/src/glad.c"
+)
+
+target_include_directories(${GLAD_LIB_NAME} PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include"    
+)
+
+target_link_libraries("${MUSHROOM_ENGINE_TARGET_NAME}" PRIVATE
+    glfw
+    glad
+)
