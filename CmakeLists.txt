@@ -18,6 +18,20 @@ add_executable(${MUSHROOM_ENGINE_TARGET_NAME})
 target_sources(${MUSHROOM_ENGINE_TARGET_NAME}
     PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/MushroomEngine/src/main.cpp"
+
+    "${CMAKE_CURRENT_SOURCE_DIR}/MushroomEngine/include/Framework/Application.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/MushroomEngine/src/Framework/Application.cpp"
+    
+    "${CMAKE_CURRENT_SOURCE_DIR}/MushroomEngine/include/Rendering/Shader.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/MushroomEngine/src/Rendering/Shader.cpp"
+
+
+)
+
+target_include_directories(${MUSHROOM_ENGINE_TARGET_NAME}
+    PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/MushroomEngine/include"
+
 )
 
 # Add the glfw lib
@@ -44,4 +58,13 @@ target_include_directories(${GLAD_LIB_NAME} PUBLIC
 target_link_libraries("${MUSHROOM_ENGINE_TARGET_NAME}" PRIVATE
     glfw
     glad
+)
+
+# configure the config file
+
+set(PROJECT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/MushroomEngine/")
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/MushroomEngine/config.h.in"
+    "${CMAKE_CURRENT_SOURCE_DIR}/MushroomEngine/include/config.h"
+    ESCAPE_QUOTES
 )
