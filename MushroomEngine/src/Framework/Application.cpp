@@ -1,6 +1,9 @@
 #include "Framework/Application.h"
 #include <iostream>
 #include "Rendering/Shader.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace mr
 {
@@ -19,9 +22,15 @@ namespace mr
     {
         float triangleVertexData[]
         {
-            -0.5, -0.5, 0.0,
-            0, 0.5, 0.0,
-            0.5, -0.5, 0.0
+            -0.5, -0.5, 0.0,   1.f, 0.f, 0.f, 
+            -0.5, 0.5, 0.0,    0.f, 1.f, 0.f,
+             0.5, 0.5, 0.0,    0.f, 0.f, 1.f,
+             0.5, -0.5, 0.0,   0.f, 1.f, 0.f,
+        };
+
+        int indexData[]
+        {
+            0, 1, 2, 2, 3, 0
         };
 
         unsigned int vertexArrayObjectId;
@@ -35,7 +44,17 @@ namespace mr
         glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertexData), triangleVertexData,GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+        //Element array buffer
+        unsigned int elementArrayObjectId;
+        glGenBuffers( 1, &elementArrayObjectId);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementArrayObjectId);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData, GL_STATIC_DRAW);
+
 
         //Shader...
         Shader shader = Shader("vertex", "fragment");
@@ -47,7 +66,8 @@ namespace mr
 		    ProcessInput(mWindow);
 		    glfwPollEvents();		
 		    glClear(GL_COLOR_BUFFER_BIT);
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            //glDrawArrays(GL_TRIANGLES, 0, 6);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		    glfwSwapBuffers(mWindow);
 	    }
     }
