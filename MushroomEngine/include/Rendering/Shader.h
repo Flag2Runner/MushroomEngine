@@ -1,4 +1,6 @@
+#pragma once
 #include <string>
+#include <glm/glm.hpp>
 
 namespace mr
 {
@@ -6,7 +8,8 @@ namespace mr
     {
     public:
         Shader(const std::string& vertexShaderName, const std::string& fragmentShadername);
-        void UserShaderProgram();
+        void UseShaderProgram();
+        void SetUniformMat4(const std::string &uniformName, const glm::mat4 &matrix);
 
     private:
         unsigned int mShaderProgramId;

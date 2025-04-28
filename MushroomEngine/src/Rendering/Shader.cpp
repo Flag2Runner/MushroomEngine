@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iostream>
 #include <glad/glad.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace mr
 {
@@ -17,11 +19,18 @@ namespace mr
 
     }
 
-    void Shader::UserShaderProgram()
+    void Shader::UseShaderProgram()
     {
         glUseProgram(mShaderProgramId);
     }
 
+    void Shader::SetUniformMat4(const std::string &uniformName, const glm::mat4 &matrix)
+    {
+        glUniformMatrix4fv(glGetUniformLocation(mShaderProgramId, uniformName.c_str()),
+        1,
+        GL_FALSE, 
+        glm::value_ptr(matrix));
+    }
     unsigned int Shader::CompileShader(const std::string &shaderName, unsigned int shaderType)
     {
         std::string ShaderStr = ReadShader(shaderName);
